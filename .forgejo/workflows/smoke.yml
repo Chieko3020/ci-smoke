@@ -1,0 +1,18 @@
+name: smoke
+on:
+  push:
+    branches: [main]
+jobs:
+  probe:
+    runs-on: self-hosted
+    steps:
+      - name: 环境基线
+        run: |
+          set -euo pipefail
+          echo "host=$(hostname)"
+          echo "pwd=$(pwd)"
+          g++-14 --version | head -1
+          cmake --version | head -1
+          node --version
+          ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg missing"
+          echo "workspace=${GITHUB_WORKSPACE:-unset}"
