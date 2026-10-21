@@ -2,17 +2,18 @@ name: smoke
 on:
   push:
     branches: [main]
+concurrency:
+  group: cue-selfhosted
+  cancel-in-progress: false
 jobs:
   probe:
     runs-on: self-hosted
     steps:
-      - name: 环境基线
+      - name: 环境基线（含 concurrency 键是否被接受）
         run: |
           set -euo pipefail
           echo "host=$(hostname)"
-          echo "pwd=$(pwd)"
           g++-14 --version | head -1
           cmake --version | head -1
           node --version
-          ffmpeg -version 2>/dev/null | head -1 || echo "ffmpeg missing"
-          echo "workspace=${GITHUB_WORKSPACE:-unset}"
+          echo "concurrency 键被接受：本 job 正常执行"
